@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Catalog</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div x-data="libraryApp()">
+        <header>
+            <h1>Library Catalog</h1>
+        </header>
+        <main>
+            <div class="book-list">
+                <h2>Books</h2>
+                <ul>
+                    <template x-for="book in books" :key="book.id">
+                        <li>
+                            <strong x-text="book.title"></strong> by <span x-text="book.author"></span> (Genre: <span x-text="book.genre"></span>)
+                            <button @click="deleteBook(book.id)">Delete</button>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="book-form">
+                <h2>Add a Book</h2>
+                <form @submit.prevent="addBook">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" x-model="newBook.title" required>
+                    <label for="author">Author</label>
+                    <input type="text" id="author" x-model="newBook.author" required>
+                    <label for="genre">Genre</label>
+                    <input type="text" id="genre" x-model="newBook.genre" required>
+                    <button type="submit">Add Book</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
