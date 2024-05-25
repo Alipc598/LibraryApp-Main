@@ -1,129 +1,90 @@
+```markdown
 # Library Application
 
-## Description
+You can access the deployed application [here](https://ica1-waad-library-ali.netlify.app/).
 
-A simple library application that allows users to register, login, and manage a list of books. Users can add, delete, search, and sort books. The application uses JWT for authentication.
+## Overview
+
+This is a simple library application that allows users to register, log in, add books, search books, and delete books. The application is deployed on Netlify.
 
 ## Features
 
 - User registration and login
-- JWT authentication for secure API requests
-- CRUD operations for books
-- Search and sort functionality for books
-- Responsive and user-friendly interface
+- JWT authentication
+- Add new books
+- Search books by title, author, or genre
+- Delete books
+- Sort books by title, author, or genre
+
+## Technologies Used
+
+- Front-end: HTML, CSS, JavaScript, Alpine.js
+- Back-end: Node.js, Express.js
+- Database: PostgreSQL
+- Authentication: JSON Web Tokens (JWT)
+- Deployment: Netlify
 
 ## Setup Instructions
 
 ### Prerequisites
 
-- Node.js
-- PostgreSQL
+- Node.js and npm installed
+- PostgreSQL installed and running
 
 ### Installation
 
-1. Clone the repository:
-   ```sh
-   git clone <repository-url>
-   ```
+1. **Clone the repository:**
 
-2. Navigate to the project directory:
-   ```sh
-   cd LibraryApp-Main
-   ```
+```sh
+git clone https://github.com/your-username/LibraryApp-Main.git
+cd LibraryApp-Main
+```
 
-3. Install the dependencies:
-   ```sh
-   npm install
-   ```
+2. **Install dependencies:**
 
-4. Set up the PostgreSQL database:
-   - Create a new database named `library`.
-   - Create `books` and `users` tables.
+```sh
+npm install
+```
 
-5. Create a `.env` file in the root directory and add the following environment variables:
-   ```plaintext
-   JWT_SECRET=your_jwt_secret
-   DB_USER=your_db_user
-   DB_HOST=localhost
-   DB_NAME=library
-   DB_PASSWORD=your_db_password
-   DB_PORT=5432
-   ```
+3. **Set up the PostgreSQL database:**
 
-6. Start the backend server:
-   ```sh
-   node server.js
-   ```
+```sh
+psql -U postgres
+CREATE DATABASE library;
+```
+
+4. **Create the `books` and `users` tables:**
+
+```sql
+\c library
+CREATE TABLE books (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(100),
+  author VARCHAR(100),
+  genre VARCHAR(50)
+);
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(100) NOT NULL
+);
+```
+
+### Running the Application
+
+1. **Start the back-end server:**
+
+```sh
+node backend/server.js
+```
+
+2. **Access the front-end:**
+
+- It is deployed at [https://ica1-waad-library-ali.netlify.app/](https://ica1-waad-library-ali.netlify.app/).
 
 ### Usage
 
-1. Open `login.html` in your browser to register and login.
-2. Open `index.html` to manage books.
-
-## API Documentation
-
-### Register
-
-- **URL:** `/register`
-- **Method:** `POST`
-- **Body:**
-  ```json
-  {
-    "username": "string",
-    "password": "string"
-  }
-  ```
-
-### Login
-
-- **URL:** `/login`
-- **Method:** `POST`
-- **Body:**
-  ```json
-  {
-    "username": "string",
-    "password": "string"
-  }
-  ```
-
-### Get All Books
-
-- **URL:** `/books`
-- **Method:** `GET`
-- **Headers:**
-  ```json
-  {
-    "Authorization": "Bearer <token>"
-  }
-  ```
-
-### Add Book
-
-- **URL:** `/books`
-- **Method:** `POST`
-- **Headers:**
-  ```json
-  {
-    "Authorization": "Bearer <token>"
-  }
-  ```
-- **Body:**
-  ```json
-  {
-    "title": "string",
-    "author": "string",
-    "genre": "string"
-  }
-  ```
-
-### Delete Book
-
-- **URL:** `/books/:id`
-- **Method:** `DELETE`
-- **Headers:**
-  ```json
-  {
-    "Authorization": "Bearer <token>"
-  }
-  ```
+1. **Register a new user.**
+2. **Log in with the registered user.**
+3. **Add, search, and delete books as needed.**
 
