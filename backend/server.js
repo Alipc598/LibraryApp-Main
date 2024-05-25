@@ -8,18 +8,18 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secret = process.env.JWT_SECRET;
+const secret = 'Y%p8r@q7J2!xNc5#L1bDzF&kZ0*3gH9';
 
 app.use(bodyParser.json());
 app.use(cors());
 
 // PostgreSQL pool setup
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: String(process.env.DB_PASSWORD), 
-  port: process.env.DB_PORT,
+  user: 'postgres', 
+  host: 'localhost',
+  database: 'library',
+  password: '1234', 
+  port: 5432,
 });
 
 // Middleware for token authentication
