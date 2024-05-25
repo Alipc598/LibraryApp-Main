@@ -43,14 +43,19 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        localStorage.setItem('token', `Bearer ${data.token}`);
-                        localStorage.setItem('username', this.loginData.username); // Store username
-                        alert('Login successful');
-                        this.loginData.username = '';
-                        this.loginData.password = '';
-                        window.location.href = 'index.html'; // Redirect to main page
+                        if (data.token) {
+                            localStorage.setItem('token', `Bearer ${data.token}`);
+                            localStorage.setItem('username', this.loginData.username); // Store username
+                            alert('Login successful');
+                            window.location.href = 'index.html'; // Redirect to main page
+                        } else {
+                            throw new Error('Login failed');
+                        }
                     })
-                    .catch(error => console.error('Error logging in:', error));
+                    .catch(error => {
+                        console.error('Error logging in:', error);
+                        alert('Invalid credentials or server error');
+                    });
                 }
             }
         }

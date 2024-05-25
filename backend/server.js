@@ -4,21 +4,22 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
+require('dotenv').config(); // Load environment variables
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secret = 'Y%p8r@q7J2!xNc5#L1bDzF&kZ0*3gH9';
+const secret = process.env.JWT_SECRET;
 
 app.use(bodyParser.json());
 app.use(cors());
 
 // PostgreSQL pool setup
 const pool = new Pool({
-  user: 'postgres', 
-  host: 'localhost',
-  database: 'library',
-  password: '1234', 
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: String(process.env.DB_PASSWORD), // Ensure password is a string
+  port: process.env.DB_PORT,
 });
 
 // Middleware for token authentication
@@ -92,23 +93,28 @@ app.post('/register', async (req, res) => {
     await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, hashedPassword]);
     res.status(201).send('User registered');
   } catch (err) {
-    res.status(500).send(err.message);
+    console.error('Error registering user:', err.message); // Debugging
+    res.status(500).send('Server error'); // Ensure this message is properly formatted
   }
 });
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
+    console.log('Login attempt:', username); // Debugging
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
     const user = result.rows[0];
+    console.log('User found:', user); // Debugging
     if (user && await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ username: user.username }, secret);
       res.json({ token });
     } else {
+      console.log('Invalid credentials'); // Debugging
       res.status(401).send('Invalid credentials');
     }
   } catch (err) {
-    res.status(500).send(err.message);
+    console.error('Server error:', err.message); // Debugging
+    res.status(500).send('Server error'); // Ensure this message is properly formatted
   }
 });
 
