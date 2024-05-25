@@ -45,15 +45,16 @@ app.post('/books', async (req, res) => {
 
 // Update an existing book
 app.patch('/books/:id', async (req, res) => {
-  const { id } = req.params;
-  const { title, author, genre } = req.body;
-  try {
-    const result = await pool.query('UPDATE books SET title = $1, author = $2, genre = $3 WHERE id = $4 RETURNING *', [title, author, genre, id]);
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
+    const { id } = req.params;
+    const { title, author, genre } = req.body;
+    try {
+      const result = await pool.query('UPDATE books SET title = $1, author = $2, genre = $3 WHERE id = $4 RETURNING *', [title, author, genre, id]);
+      res.json(result.rows[0]);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  });
+  
 
 // Delete a book
 app.delete('/books/:id', async (req, res) => {
