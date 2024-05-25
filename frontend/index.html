@@ -6,25 +6,128 @@
     <title>Library Catalog</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
-    <script src="script.js" defer></script>
+    <script>
+        function libraryApp() {
+            return {
+                books: [],
+                newBook: {
+                    title: '',
+                    author: '',
+                    genre: ''
+                },
+                searchField: 'title',
+                searchQuery: '',
+                sortField: 'id',
+                sortDirection: 'asc',
+                token: localStorage.getItem('token') || '',
+                fetchBooks() {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    fetch('http://localhost:3000/books', {
+                        headers: {
+                            'Authorization': this.token
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Fetched books:', data); // Debug output
+                        this.books = data;
+                    })
+                    .catch(error => console.error('Error fetching books:', error)); // Handle errors
+                },
+                addBook() {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    fetch('http://localhost:3000/books', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': this.token
+                        },
+                        body: JSON.stringify(this.newBook)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.books.push(data);
+                        this.newBook.title = '';
+                        this.newBook.author = '';
+                        this.newBook.genre = '';
+                    })
+                    .catch(error => console.error('Error adding book:', error)); // Handle errors
+                },
+                deleteBook(id) {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    fetch(`http://localhost:3000/books/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': this.token
+                        }
+                    })
+                    .then(() => {
+                        this.books = this.books.filter(book => book.id !== id);
+                    })
+                    .catch(error => console.error('Error deleting book:', error)); // Handle errors
+                },
+                searchBooks() {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    const query = `${this.searchField}=${encodeURIComponent(this.searchQuery)}`;
+                    fetch(`http://localhost:3000/books?${query}`, {
+                        headers: {
+                            'Authorization': this.token
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Search results:', data); // Debug output
+                        this.books = data;
+                    })
+                    .catch(error => console.error('Error searching books:', error)); // Handle errors
+                },
+                sortBooks(field) {
+                    this.sortField = field;
+                    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+                    this.books.sort((a, b) => {
+                        if (a[field] < b[field]) return this.sortDirection === 'asc' ? -1 : 1;
+                        if (a[field] > b[field]) return this.sortDirection === 'asc' ? 1 : -1;
+                        return 0;
+                    });
+                },
+                init() {
+                    if (this.token) {
+                        this.fetchBooks();
+                    } else {
+                        alert('You need to log in first');
+                        window.location.href = 'login.html';
+                    }
+                }
+            }
+        }
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('libraryApp', libraryApp);
+        });
+    </script>
 </head>
 <body>
     <div x-data="libraryApp()">
         <header>
             <h1>Library Catalog</h1>
+            <button @click="window.location.href='login.html'">Login/Register</button>
         </header>
         <main>
-            <div class="book-list">
-                <h2>Books</h2>
-                <ul>
-                    <template x-for="book in books" :key="book.id">
-                        <li>
-                            <strong x-text="book.title"></strong> by <span x-text="book.author"></span> (Genre: <span x-text="book.genre"></span>)
-                            <button @click="deleteBook(book.id)">Delete</button>
-                        </li>
-                    </template>
-                </ul>
-            </div>
             <div class="book-form">
                 <h2>Add a Book</h2>
                 <form @submit.prevent="addBook">
@@ -36,6 +139,48 @@
                     <input type="text" id="genre" x-model="newBook.genre" required>
                     <button type="submit">Add Book</button>
                 </form>
+            </div>
+            <div class="search-form">
+                <h2>Search Books</h2>
+                <form @submit.prevent="searchBooks">
+                    <label for="searchField">Search by</label>
+                    <select id="searchField" x-model="searchField">
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="genre">Genre</option>
+                    </select>
+                    <input type="text" x-model="searchQuery" placeholder="Enter search term">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="book-list">
+                <h2>Books</h2>
+                <div class="sort-form">
+                    <h3>Sort Books</h3>
+                    <button @click="sortBooks('title')">Sort by Title</button>
+                    <button @click="sortBooks('author')">Sort by Author</button>
+                    <button @click="sortBooks('genre')">Sort by Genre</button>
+                </div>
+                <table class="book-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="book in books" :key="book.id">
+                            <tr>
+                                <td x-text="book.title"></td>
+                                <td x-text="book.author"></td>
+                                <td x-text="book.genre"></td>
+                                <td><button @click="deleteBook(book.id)">Delete</button></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>
