@@ -22,11 +22,6 @@
                 token: localStorage.getItem('token') || '',
                 username: localStorage.getItem('username') || '',
                 fetchBooks() {
-                    if (!this.token) {
-                        alert('You need to log in first');
-                        window.location.href = 'login.html';
-                        return;
-                    }
                     fetch('http://localhost:3000/books', {
                         headers: {
                             'Authorization': this.token
@@ -40,11 +35,6 @@
                     .catch(error => console.error('Error fetching books:', error));
                 },
                 addBook() {
-                    if (!this.token) {
-                        alert('You need to log in first');
-                        window.location.href = 'login.html';
-                        return;
-                    }
                     fetch('http://localhost:3000/books', {
                         method: 'POST',
                         headers: {
@@ -63,11 +53,6 @@
                     .catch(error => console.error('Error adding book:', error));
                 },
                 deleteBook(id) {
-                    if (!this.token) {
-                        alert('You need to log in first');
-                        window.location.href = 'login.html';
-                        return;
-                    }
                     fetch(`http://localhost:3000/books/${id}`, {
                         method: 'DELETE',
                         headers: {
@@ -80,11 +65,6 @@
                     .catch(error => console.error('Error deleting book:', error));
                 },
                 searchBooks() {
-                    if (!this.token) {
-                        alert('You need to log in first');
-                        window.location.href = 'login.html';
-                        return;
-                    }
                     const query = `${this.searchField}=${encodeURIComponent(this.searchQuery)}`;
                     fetch(`http://localhost:3000/books?${query}`, {
                         headers: {
@@ -108,11 +88,11 @@
                     });
                 },
                 init() {
-                    if (this.token) {
-                        this.fetchBooks();
-                    } else {
+                    if (!this.token) {
                         alert('You need to log in first');
                         window.location.href = 'login.html';
+                    } else {
+                        this.fetchBooks();
                     }
                 }
             }
