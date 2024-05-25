@@ -4,7 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
-require('dotenv').config(); // Load environment variables
+require('dotenv').config(); 
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,7 +18,7 @@ const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
-  password: String(process.env.DB_PASSWORD), // Ensure password is a string
+  password: String(process.env.DB_PASSWORD), 
   port: process.env.DB_PORT,
 });
 
@@ -94,9 +94,10 @@ app.post('/register', async (req, res) => {
     res.status(201).send('User registered');
   } catch (err) {
     console.error('Error registering user:', err.message); // Debugging
-    res.status(500).send('Server error'); // Ensure this message is properly formatted
+    res.status(500).send('Server error'); 
   }
 });
+
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -114,7 +115,7 @@ app.post('/login', async (req, res) => {
     }
   } catch (err) {
     console.error('Server error:', err.message); // Debugging
-    res.status(500).send('Server error'); // Ensure this message is properly formatted
+    res.status(500).send('Server error'); 
   }
 });
 
