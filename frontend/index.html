@@ -87,6 +87,11 @@
                         return 0;
                     });
                 },
+                logout() {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('username');
+                    window.location.href = 'login.html';
+                },
                 init() {
                     if (!this.token) {
                         alert('You need to log in first');
@@ -107,7 +112,10 @@
         <header>
             <h1>Library Catalog</h1>
             <template x-if="username">
-                <span>Welcome, <span x-text="username"></span></span>
+                <div>
+                    <span>Welcome, <span x-text="username"></span></span>
+                    <button @click="logout">Logout</button>
+                </div>
             </template>
             <template x-if="!username">
                 <button @click="window.location.href='login.html'">Login/Register</button>
