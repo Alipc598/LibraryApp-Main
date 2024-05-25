@@ -7,98 +7,55 @@ const { Pool } = require('pg');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const SECRET_KEY = 'your_secret_key'; // Change this to a more secure key
+const secret = 'Y%p8r@q7J2!xNc5#L1bDzF&kZ0*3gH9';
 
-// Middleware
-app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 // PostgreSQL pool setup
 const pool = new Pool({
-  user: 'postgres',
+  user: 'postgres', 
   host: 'localhost',
   database: 'library',
-  password: '1234',
+  password: '1234', 
   port: 5432,
 });
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('Library Application Backend');
-});
-
-// Register a new user
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
-// Login a user
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-    if (result.rows.length === 0) {
-      return res.status(400).send('User not found');
-    }
-
-    const user = result.rows[0];
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(400).send('Invalid password');
-    }
-
-    const token = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
-// Middleware to authenticate the token
+// Middleware for token authentication
 function authenticateToken(req, res, next) {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(401).send('Access denied');
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) return res.sendStatus(401);
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.status(403).send('Invalid token');
+  jwt.verify(token, secret, (err, user) => {
+    if (err) return res.sendStatus(403);
     req.user = user;
     next();
   });
 }
 
-// Protect the routes below with the authentication middleware
-app.use(authenticateToken);
+// Routes
+app.get('/', (req, res) => {
+  res.send('Library Application Backend');
+});
 
-// Get all books or search books
-app.get('/books', async (req, res) => {
-  const { title, author, genre } = req.query;
+app.get('/books', authenticateToken, async (req, res) => {
   try {
-    let query = 'SELECT * FROM books';
-    const params = [];
-    const conditions = [];
+    const { title, author, genre } = req.query;
+    let query = 'SELECT * FROM books WHERE 1=1';
+    let params = [];
 
     if (title) {
+      query += ' AND title ILIKE $' + (params.length + 1);
       params.push(`%${title}%`);
-      conditions.push(`title ILIKE $${params.length}`);
     }
     if (author) {
+      query += ' AND author ILIKE $' + (params.length + 1);
       params.push(`%${author}%`);
-      conditions.push(`author ILIKE $${params.length}`);
     }
     if (genre) {
+      query += ' AND genre ILIKE $' + (params.length + 1);
       params.push(`%${genre}%`);
-      conditions.push(`genre ILIKE $${params.length}`);
-    }
-    if (conditions.length > 0) {
-      query += ' WHERE ' + conditions.join(' AND ');
     }
 
     const result = await pool.query(query, params);
@@ -108,8 +65,7 @@ app.get('/books', async (req, res) => {
   }
 });
 
-// Add a new book
-app.post('/books', async (req, res) => {
+app.post('/books', authenticateToken, async (req, res) => {
   const { title, author, genre } = req.body;
   try {
     const result = await pool.query('INSERT INTO books (title, author, genre) VALUES ($1, $2, $3) RETURNING *', [title, author, genre]);
@@ -119,20 +75,7 @@ app.post('/books', async (req, res) => {
   }
 });
 
-// Update an existing book
-app.patch('/books/:id', async (req, res) => {
-  const { id } = req.params;
-  const { title, author, genre } = req.body;
-  try {
-    const result = await pool.query('UPDATE books SET title = $1, author = $2, genre = $3 WHERE id = $4 RETURNING *', [title, author, genre, id]);
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
-// Delete a book
-app.delete('/books/:id', async (req, res) => {
+app.delete('/books/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query('DELETE FROM books WHERE id = $1', [id]);
@@ -142,7 +85,33 @@ app.delete('/books/:id', async (req, res) => {
   }
 });
 
-// Start the server
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, hashedPassword]);
+    res.status(201).send('User registered');
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    const user = result.rows[0];
+    if (user && await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ username: user.username }, secret);
+      res.json({ token });
+    } else {
+      res.status(401).send('Invalid credentials');
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

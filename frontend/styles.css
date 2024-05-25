@@ -2,17 +2,31 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #1a1a2e; 
-    color: #eaeaea; 
+    background-color: #1a1a2e;
+    color: #eaeaea;
 }
 
 header {
-    background-color: #16213e; 
+    background-color: #16213e;
     color: white;
     padding: 1em;
     width: 100%;
     text-align: center;
     font-size: 1.5em;
+}
+
+header button {
+    background-color: #3ab54a;
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+header button:hover {
+    background-color: #2a9c36;
 }
 
 main {
@@ -24,7 +38,7 @@ main {
 }
 
 .auth-forms, .book-form, .search-form, .book-list {
-    background-color: #0f3460; 
+    background-color: #0f3460;
     padding: 1em;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -60,14 +74,14 @@ input, select {
 }
 
 button {
-    background-color: #3ab54a; 
+    background-color: #3ab54a;
     color: white;
     cursor: pointer;
     font-weight: bold;
 }
 
 button:hover {
-    background-color: #2a9c36; 
+    background-color: #2a9c36;
 }
 
 .book-table {
@@ -82,16 +96,16 @@ button:hover {
 }
 
 .book-table th {
-    background-color: #3ab54a; 
+    background-color: #3ab54a;
     color: white;
 }
 
 .book-table tr:nth-child(even) {
-    background-color: #16213e; 
+    background-color: #16213e;
 }
 
 .book-table tr:nth-child(odd) {
-    background-color: #0f3460; 
+    background-color: #0f3460;
 }
 
 .book-table button {
