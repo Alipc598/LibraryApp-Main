@@ -1,4 +1,3 @@
-```markdown
 # Library Application
 
 You can access the deployed application [here](https://ica1-waad-library-ali.netlify.app/).
