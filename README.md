@@ -96,4 +96,58 @@ node backend/server.js
 1. **Log in as an admin user.**
 2. **Browse and search books.**
 3. **Add, search, and delete books as needed (Admin only).**
-```
+
+## Self-Evaluation
+
+### Overview
+
+The library application project aimed to create a web application where users can browse books and librarians can manage the book catalog. The project included developing both a frontend interface and a backend API. This self-evaluation will cover the project steps, highlight the trickiest part, and provide a critical self-assessment of the entire process.
+
+### Project Steps and Evaluation
+
+1. **Project Setup and Initial Commit**:
+   - Successfully set up the project repository and structure.
+   - Initializing the project went smoothly without any issues.
+
+2. **Backend Development with REST API**:
+   - Developed REST API endpoints for managing books.
+   - Integrated PostgreSQL for data storage.
+   - Implemented JWT authentication for securing admin functionalities.
+   - This phase was completed on time and met all the requirements.
+
+3. **Frontend Development**:
+   - Created a simple yet functional user interface using HTML, CSS, and JavaScript.
+   - Used Alpine.js for interactive elements.
+   - Ensured the UI was responsive and user-friendly.
+   - Completed the frontend development within the planned timeline.
+
+4. **Integration and Testing**:
+   - Integrated the frontend with the backend.
+   - Conducted unit and integration testing.
+   - Ensured all functionalities worked as expected.
+   - Identified and fixed minor bugs during testing.
+   - This step required more time than expected but was completed successfully.
+
+5. **Deployment and Final Testing**:
+   - Deployed the frontend on Netlify without any major issues.
+   - Encountered significant challenges while deploying the backend on Heroku due to compatibility issues.
+   - Explored other deployment options but faced limitations with free services.
+   - Ultimately, the backend needs to be run locally for full functionality.
+   - This phase was the most challenging and did not meet the initial expectation of having a fully deployed backend.
+
+6. **Documentation and Submission**:
+   - Prepared comprehensive documentation including setup instructions and usage guide.
+   - Submitted the project with all required details.
+   - This phase was completed successfully and on time.
+
+### Tricky Part: Deploying the Backend
+
+Deploying the backend was the trickiest part of this project. Most of the hosting services were not free or had limitations that affected functionality. Free services either did not support the required features or had compatibility issues with the backend code. Consequently, the backend server needs to be run locally, which is not ideal but necessary under the current circumstances.
+
+### Critical Self-Evaluation
+
+The project setup and development phases went well. The backend API was implemented efficiently and met all the functional requirements. The frontend development was straightforward, and the integration between the frontend and backend was smooth. However, the deployment phase highlighted significant challenges.
+
+The decision to use Heroku for backend deployment initially seemed feasible but ultimately proved problematic due to compatibility issues. Free alternatives either did not meet the requirements or had their own limitations. This situation led to a less-than-ideal solution where the backend needs to be run locally.
+
+In hindsight, exploring deployment options more thoroughly during the planning phase might have mitigated some of these challenges. Additionally, having contingency plans for deployment issues would have been beneficial. Overall, the project was successful in terms of functionality but fell short in terms of deployment, which is a critical aspect of any web application. This experience highlighted the importance of thorough planning and flexibility in addressing unforeseen challenges.
