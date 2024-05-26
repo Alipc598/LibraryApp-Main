@@ -1,6 +1,36 @@
 {
+  "name": "libraryapp-main",
+  "version": "1.0.0",
+  "description": "A library management application",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2"
-  }
+    "jsonwebtoken": "^9.0.2",
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/libraryapp-main.git"
+  },
+  "keywords": [
+    "library",
+    "management",
+    "heroku"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yourusername/libraryapp-main/issues"
+  },
+  "homepage": "https://github.com/yourusername/libraryapp-main#readme"
 }
