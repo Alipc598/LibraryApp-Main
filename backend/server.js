@@ -4,20 +4,22 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
-const path = require('path'); // Add this line to serve static files
-require('dotenv').config();
+require('dotenv').config(); 
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secret = process.env.SECRET || 'a1B2c3D4e5F6g7H8i9J0kL1mN2oP3';
+const secret = 'a1B2c3D4e5F6g7H8i9J0kL1mN2oP3';
 
 app.use(bodyParser.json());
 app.use(cors());
 
 // PostgreSQL pool setup
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  user: 'postgres', 
+  host: 'localhost',
+  database: 'library',
+  password: '1234', 
+  port: 5432,
 });
 
 // Middleware for token authentication
@@ -33,12 +35,9 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Serve static files from the frontend directory
-app.use(express.static(path.join(__dirname, 'frontend')));
-
 // Routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+  res.send('Library Application Backend');
 });
 
 app.get('/books', authenticateToken, async (req, res) => {
@@ -95,9 +94,10 @@ app.post('/register', async (req, res) => {
     res.status(201).send('User registered');
   } catch (err) {
     console.error('Error registering user:', err.message); // Debugging
-    res.status(500).send('Server error');
+    res.status(500).send('Server error'); 
   }
 });
+
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -115,16 +115,10 @@ app.post('/login', async (req, res) => {
     }
   } catch (err) {
     console.error('Server error:', err.message); // Debugging
-    res.status(500).send('Server error');
+    res.status(500).send('Server error'); 
   }
 });
 
-// Catch-all handler to serve the frontend's index.html for any other requests
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
-
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
