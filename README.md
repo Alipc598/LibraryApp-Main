@@ -2,6 +2,12 @@
 
 You can access the deployed application [here](https://ica1-waad-library-ali.netlify.app/).
 
+Make sure to **Start the back-end server locally on port 3000** for the application to be fully functional:
+
+```sh
+node backend/server.js
+```
+
 ## Overview
 
 This is a simple library application that allows users to register, log in, add books, search books, and delete books. The application is deployed on Netlify.
@@ -21,7 +27,7 @@ This is a simple library application that allows users to register, log in, add 
 - Back-end: Node.js, Express.js
 - Database: PostgreSQL
 - Authentication: JSON Web Tokens (JWT)
-- Deployment: Netlify
+- Deployment: Netlify for front-end
 
 ## Setup Instructions
 
@@ -71,7 +77,7 @@ CREATE TABLE users (
 
 ### Running the Application
 
-1. **Start the back-end server:**
+1. **Start the back-end server locally on port 3000:**
 
 ```sh
 node backend/server.js
@@ -79,11 +85,11 @@ node backend/server.js
 
 2. **Access the front-end:**
 
-- It is deployed at [https://ica1-waad-library-ali.netlify.app/](https://ica1-waad-library-ali.netlify.app/).
+- The front-end is deployed at [https://ica1-waad-library-ali.netlify.app/](https://ica1-waad-library-ali.netlify.app/).
 
 ### Usage
 
 1. **Register a new user.**
 2. **Log in with the registered user.**
 3. **Add, search, and delete books as needed.**
-
+```

@@ -1,35 +1,20 @@
 {
-  "name": "libraryapp-main",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "A library management application",
-  "main": "backend/server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "build": "echo \"No build step needed for plain HTML/CSS/JS frontend\""
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2",
-    "express": "^4.17.1",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yourusername/libraryapp-main.git"
-  },
-  "keywords": [
-    "library",
-    "management",
-    "heroku"
-  ],
-  "author": "Ali",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/yourusername/libraryapp-main/issues"
-  },
-  "homepage": "https://github.com/yourusername/libraryapp-main#readme"
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.5"
+  }
 }

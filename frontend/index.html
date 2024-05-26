@@ -22,19 +22,20 @@
                 token: localStorage.getItem('token') || '',
                 username: localStorage.getItem('username') || '',
                 fetchBooks() {
-                    fetch('http://localhost:3000/books', {
-                        headers: {
-                            'Authorization': this.token
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Fetched books:', data);
-                        this.books = data;
-                    })
-                    .catch(error => console.error('Error fetching books:', error));
+                    fetch('http://localhost:3000/books')
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Fetched books:', data);
+                            this.books = data;
+                        })
+                        .catch(error => console.error('Error fetching books:', error));
                 },
                 addBook() {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'admin.html';
+                        return;
+                    }
                     fetch('http://localhost:3000/books', {
                         method: 'POST',
                         headers: {
@@ -53,12 +54,17 @@
                     .catch(error => console.error('Error adding book:', error));
                 },
                 deleteBook(id) {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'admin.html';
+                        return;
+                    }
                     fetch(`http://localhost:3000/books/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': this.token
                         }
-                    })
+                })
                     .then(() => {
                         this.books = this.books.filter(book => book.id !== id);
                     })
@@ -66,17 +72,13 @@
                 },
                 searchBooks() {
                     const query = `${this.searchField}=${encodeURIComponent(this.searchQuery)}`;
-                    fetch(`http://localhost:3000/books?${query}`, {
-                        headers: {
-                            'Authorization': this.token
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Search results:', data);
-                        this.books = data;
-                    })
-                    .catch(error => console.error('Error searching books:', error));
+                    fetch(`http://localhost:3000/books?${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Search results:', data);
+                            this.books = data;
+                        })
+                        .catch(error => console.error('Error searching books:', error));
                 },
                 sortBooks(field) {
                     this.sortField = field;
@@ -90,15 +92,10 @@
                 logout() {
                     localStorage.removeItem('token');
                     localStorage.removeItem('username');
-                    window.location.href = 'login.html';
+                    window.location.href = 'admin.html';
                 },
                 init() {
-                    if (!this.token) {
-                        alert('You need to log in first');
-                        window.location.href = 'login.html';
-                    } else {
-                        this.fetchBooks();
-                    }
+                    this.fetchBooks();
                 }
             }
         }
@@ -118,11 +115,11 @@
                 </div>
             </template>
             <template x-if="!username">
-                <button @click="window.location.href='login.html'">Login/Register</button>
+                <button @click="window.location.href='admin.html'">Admin Panel</button>
             </template>
         </header>
         <main>
-            <div class="book-form">
+            <div class="book-form" x-show="token">
                 <h2>Add a Book</h2>
                 <form @submit.prevent="addBook">
                     <label for="title">Title</label>
@@ -161,7 +158,7 @@
                             <th>Title</th>
                             <th>Author</th>
                             <th>Genre</th>
-                            <th>Actions</th>
+                            <th x-show="token">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,7 +167,7 @@
                                 <td x-text="book.title"></td>
                                 <td x-text="book.author"></td>
                                 <td x-text="book.genre"></td>
-                                <td><button @click="deleteBook(book.id)">Delete</button></td>
+                                <td x-show="token"><button @click="deleteBook(book.id)">Delete</button></td>
                             </tr>
                         </template>
                     </tbody>
