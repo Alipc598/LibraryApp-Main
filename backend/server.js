@@ -9,18 +9,15 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secret = 'a1B2c3D4e5F6g7H8i9J0kL1mN2oP3';
+const secret = process.env.SECRET || 'a1B2c3D4e5F6g7H8i9J0kL1mN2oP3';
 
 app.use(bodyParser.json());
 app.use(cors());
 
 // PostgreSQL pool setup
 const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'library',
-  password: process.env.DB_PASSWORD || '1234',
-  port: process.env.DB_PORT || 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
 // Middleware for token authentication
