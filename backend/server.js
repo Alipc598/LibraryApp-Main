@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secret = 'Y%p8r@q7J2!xNc5#L1bDzF&kZ0*3gH9';
+const secret = 'a1B2c3D4e5F6g7H8i9J0kL1mN2oP3';
 
 app.use(bodyParser.json());
 app.use(cors());
