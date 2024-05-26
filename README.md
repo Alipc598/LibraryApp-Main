@@ -2,7 +2,11 @@
 
 You can access the deployed application [here](https://ica1-waad-library-ali.netlify.app/).
 
-Make sure to **Start the back-end server locally on port 3000** for the application to be fully functional:
+## Important Notes
+
+- **Admin Username:** Admin
+- **Admin Password:** 1234
+- **Start the back-end server locally on port 3000** for the application to be fully functional:
 
 ```sh
 node backend/server.js
@@ -10,15 +14,15 @@ node backend/server.js
 
 ## Overview
 
-This is a simple library application that allows users to register, log in, add books, search books, and delete books. The application is deployed on Netlify.
+This is a simple library application that allows users to browse and search books. Admin users can log in to add, delete, and edit books. The application is deployed on Netlify for the front-end.
 
 ## Features
 
-- User registration and login
-- JWT authentication
-- Add new books
-- Search books by title, author, or genre
-- Delete books
+- Admin login
+- JWT authentication for admin actions
+- Browse and search books by title, author, or genre
+- Add new books (Admin only)
+- Delete books (Admin only)
 - Sort books by title, author, or genre
 
 ## Technologies Used
@@ -41,7 +45,7 @@ This is a simple library application that allows users to register, log in, add 
 1. **Clone the repository:**
 
 ```sh
-git clone https://github.com/your-username/LibraryApp-Main.git
+git clone https://github.com/Alipc598/LibraryApp-Main.git
 cd LibraryApp-Main
 ```
 
@@ -89,7 +93,7 @@ node backend/server.js
 
 ### Usage
 
-1. **Register a new user.**
-2. **Log in with the registered user.**
-3. **Add, search, and delete books as needed.**
+1. **Log in as an admin user.**
+2. **Browse and search books.**
+3. **Add, search, and delete books as needed (Admin only).**
 ```
