@@ -6,6 +6,7 @@
     <title>Library Catalog</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
+
     <script>
         function libraryApp() {
             return {
@@ -15,6 +16,7 @@
                     author: '',
                     genre: ''
                 },
+                editedBook: null,
                 searchField: 'title',
                 searchQuery: '',
                 sortField: 'id',
@@ -44,14 +46,41 @@
                         },
                         body: JSON.stringify(this.newBook)
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        this.books.push(data);
-                        this.newBook.title = '';
-                        this.newBook.author = '';
-                        this.newBook.genre = '';
+                        .then(response => response.json())
+                        .then(data => {
+                            this.books.push(data);
+                            this.newBook.title = '';
+                            this.newBook.author = '';
+                            this.newBook.genre = '';
+                        })
+                        .catch(error => console.error('Error adding book:', error));
+                },
+                startEditBook(book) {
+                    this.editedBook = { ...book };
+                    this.openModal();
+                },
+                updateBook() {
+                    if (!this.token) {
+                        alert('You need to log in first');
+                        window.location.href = 'admin.html';
+                        return;
+                    }
+                    fetch(`http://localhost:3000/books/${this.editedBook.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': this.token
+                        },
+                        body: JSON.stringify(this.editedBook)
                     })
-                    .catch(error => console.error('Error adding book:', error));
+                        .then(response => response.json())
+                        .then(updatedBook => {
+                            const index = this.books.findIndex(b => b.id === updatedBook.id);
+                            this.books.splice(index, 1, updatedBook);
+                            this.editedBook = null;
+                            this.closeModal();
+                        })
+                        .catch(error => console.error('Error updating book:', error));
                 },
                 deleteBook(id) {
                     if (!this.token) {
@@ -64,11 +93,11 @@
                         headers: {
                             'Authorization': this.token
                         }
-                })
-                    .then(() => {
-                        this.books = this.books.filter(book => book.id !== id);
                     })
-                    .catch(error => console.error('Error deleting book:', error));
+                        .then(() => {
+                            this.books = this.books.filter(book => book.id !== id);
+                        })
+                        .catch(error => console.error('Error deleting book:', error));
                 },
                 searchBooks() {
                     const query = `${this.searchField}=${encodeURIComponent(this.searchQuery)}`;
@@ -93,6 +122,13 @@
                     localStorage.removeItem('token');
                     localStorage.removeItem('username');
                     window.location.href = 'admin.html';
+                },
+                openModal() {
+                    document.getElementById('editModal').style.display = 'block';
+                },
+                closeModal() {
+                    document.getElementById('editModal').style.display = 'none';
+                    this.editedBook = null;
                 },
                 init() {
                     this.fetchBooks();
@@ -119,7 +155,7 @@
             </template>
         </header>
         <main>
-            <div class="book-form" x-show="token">
+            <div class="book-form" x-show="username === 'Admin'">
                 <h2>Add a Book</h2>
                 <form @submit.prevent="addBook">
                     <label for="title">Title</label>
@@ -158,7 +194,7 @@
                             <th>Title</th>
                             <th>Author</th>
                             <th>Genre</th>
-                            <th x-show="token">Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -167,13 +203,33 @@
                                 <td x-text="book.title"></td>
                                 <td x-text="book.author"></td>
                                 <td x-text="book.genre"></td>
-                                <td x-show="token"><button @click="deleteBook(book.id)">Delete</button></td>
+                                <td>
+                                    <button x-show="username === 'Admin'" @click="startEditBook(book)">Edit</button>
+                                    <button x-show="username === 'Admin'" @click="deleteBook(book.id)">Delete</button>
+                                </td>
                             </tr>
                         </template>
                     </tbody>
                 </table>
             </div>
         </main>
+
+        <!-- The Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close" @click="closeModal">&times;</span>
+                <h2>Edit Book</h2>
+                <form @submit.prevent="updateBook">
+                    <label for="editTitle">Title</label>
+                    <input type="text" id="editTitle" x-model="editedBook.title" required>
+                    <label for="editAuthor">Author</label>
+                    <input type="text" id="editAuthor" x-model="editedBook.author" required>
+                    <label for="editGenre">Genre</label>
+                    <input type="text" id="editGenre" x-model="editedBook.genre" required>
+                    <button type="submit">Update Book</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

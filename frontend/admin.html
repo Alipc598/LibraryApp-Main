@@ -13,33 +13,31 @@
                     username: '',
                     password: ''
                 },
-                loginError: '',
                 login() {
-                    fetch('http://localhost:3000/login', {
+                    fetch('http://localhost:3000/admin', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(this.loginData)
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.token) {
-                            localStorage.setItem('token', `Bearer ${data.token}`);
-                            localStorage.setItem('username', this.loginData.username); // Store username
-                            alert('Login successful');
-                            this.loginData.username = '';
-                            this.loginData.password = '';
-                            window.location.href = 'index.html'; // Redirect to main page
-                        } else {
-                            this.loginError = 'Invalid credentials';
-                            alert(this.loginError); // Show error message
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Invalid credentials or server error');
                         }
+                        return response.json();
+                    })
+                    .then(data => {
+                        localStorage.setItem('token', `Bearer ${data.token}`);
+                        localStorage.setItem('username', this.loginData.username); // Store username
+                        alert('Login successful');
+                        this.loginData.username = '';
+                        this.loginData.password = '';
+                        window.location.href = 'index.html'; // Redirect to main page
                     })
                     .catch(error => {
                         console.error('Error logging in:', error);
-                        this.loginError = 'Server error';
-                        alert(this.loginError); // Show error message
+                        alert('Invalid credentials or server error');
                     });
                 }
             }

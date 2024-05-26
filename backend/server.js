@@ -8,9 +8,8 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secret = process.env.JWT_SECRET;
+const secret = process.env.JWT_SECRET || 'a1B2c3D4e5F6g7H8i9J0kL1mN2oP3';
 
-// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -33,6 +32,17 @@ function authenticateToken(req, res, next) {
     if (err) return res.sendStatus(403);
     req.user = user;
     next();
+  });
+}
+
+// Middleware for admin authentication
+function authenticateAdmin(req, res, next) {
+  authenticateToken(req, res, () => {
+    if (req.user.username === 'Admin') {
+      next();
+    } else {
+      res.sendStatus(403);
+    }
   });
 }
 
@@ -67,7 +77,7 @@ app.get('/books', async (req, res) => {
   }
 });
 
-app.post('/books', authenticateToken, async (req, res) => {
+app.post('/books', authenticateAdmin, async (req, res) => {
   const { title, author, genre } = req.body;
   try {
     const result = await pool.query('INSERT INTO books (title, author, genre) VALUES ($1, $2, $3) RETURNING *', [title, author, genre]);
@@ -77,7 +87,18 @@ app.post('/books', authenticateToken, async (req, res) => {
   }
 });
 
-app.delete('/books/:id', authenticateToken, async (req, res) => {
+app.patch('/books/:id', authenticateAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { title, author, genre } = req.body;
+  try {
+    const result = await pool.query('UPDATE books SET title = $1, author = $2, genre = $3 WHERE id = $4 RETURNING *', [title, author, genre, id]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+app.delete('/books/:id', authenticateAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query('DELETE FROM books WHERE id = $1', [id]);
@@ -87,13 +108,10 @@ app.delete('/books/:id', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/login', async (req, res) => {
+app.post('/admin', async (req, res) => {
   const { username, password } = req.body;
-  const adminUsername = 'Admin';
-  const adminPassword = '1234';
-
-  if (username === adminUsername && password === adminPassword) {
-    const token = jwt.sign({ username: adminUsername }, secret);
+  if (username === 'Admin' && password === '1234') {
+    const token = jwt.sign({ username }, secret);
     res.json({ token });
   } else {
     res.status(401).send('Invalid credentials');
