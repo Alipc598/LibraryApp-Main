@@ -78,14 +78,11 @@ The aim of this project is to develop a web application that serves as a book li
   - Update existing books.
   - Delete books.
 
-### Project Repository
-
-- The project repository can be cloned from GitHub: `git clone https://github.com/your-username/LibraryApp-Main.git`
 
 ### Deployment Links
 
 - **Frontend**: [Library Application on Netlify](https://ica1-waad-library-ali.netlify.app/)
-- **Backend**: [Library Application Backend on Heroku](https://ica1-waad-library-ali.herokuapp.com/) (Currently crashing, procced with running the server locally, until a fix has pushed)
+- **Backend**: [Library Application Backend on Heroku](https://library-ica-14ae1793977b.herokuapp.com/) (Currently crashing, procced with running the server locally, until a fix has pushed)
 
 
 ### Usage
