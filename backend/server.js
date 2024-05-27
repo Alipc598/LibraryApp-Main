@@ -64,7 +64,25 @@ app.get('/', (req, res) => {
 
 app.get('/books', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM books');
+    const { title, author, genre } = req.query;
+    let query = 'SELECT * FROM books WHERE 1=1';
+    let params = [];
+
+    if (title) {
+      query += ' AND title ILIKE $' + (params.length + 1);
+      params.push(`%${title}%`);
+    }
+    if (author) {
+      query += ' AND author ILIKE $' + (params.length + 1);
+      params.push(`%${author}%`);
+    }
+    if (genre) {
+      query += ' AND genre ILIKE $' + (params.length + 1);
+      params.push(`%${genre}%`);
+    }
+
+    console.log('Executing query:', query, 'with params:', params);
+    const result = await pool.query(query, params);
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching books:', err.message);
