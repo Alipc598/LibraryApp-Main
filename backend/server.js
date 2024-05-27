@@ -1,10 +1,13 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
-require('dotenv').config();
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import pkg from 'pg';
+import { config } from 'dotenv';
+
+config();
+
+const { Pool } = pkg;
 
 const app = express();
 const port = process.env.PORT || 3000;
