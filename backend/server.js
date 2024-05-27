@@ -55,12 +55,12 @@ function authenticateAdmin(req, res, next) {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Serve static files from the 'public' directory
-app.use(express.static(join(__dirname, 'public')));
+// Serve static files from the 'frontend' directory
+app.use(express.static(join(__dirname, '..', 'frontend')));
 
 // Routes
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'));
+  res.sendFile(join(__dirname, '..', 'frontend', 'index.html'));
 });
 
 app.get('/books', async (req, res) => {
@@ -132,7 +132,7 @@ app.post('/admin', async (req, res) => {
 
 // Serve the frontend HTML file for all unknown routes
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'));
+  res.sendFile(join(__dirname, '..', 'frontend', 'index.html'));
 });
 
 app.listen(port, () => {
