@@ -1,3 +1,9 @@
+### Demo Video
+
+Watch the demo video by clicking the image below:
+
+[![Watch the video](https://i.imgur.com/AcVQEDv_d.webp?maxwidth=1520&fidelity=grand)](https://streamable.com/f9h9l1)
+
 # Library Application
 
 You can access the deployed application [here](https://ica1-waad-library-ali.netlify.app/).
