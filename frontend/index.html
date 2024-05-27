@@ -16,7 +16,10 @@
                     author: '',
                     genre: ''
                 },
-                editedBook: null,
+                editedBookId: null,
+                editedTitle: '',
+                editedAuthor: '',
+                editedGenre: '',
                 searchField: 'title',
                 searchQuery: '',
                 sortField: 'id',
@@ -56,7 +59,11 @@
                         .catch(error => console.error('Error adding book:', error));
                 },
                 startEditBook(book) {
-                    this.editedBook = { ...book };
+                    this.editedBookId = book.id;
+                    this.editedTitle = book.title;
+                    this.editedAuthor = book.author;
+                    this.editedGenre = book.genre;
+                    console.log('Editing book:', this.editedBookId, this.editedTitle, this.editedAuthor, this.editedGenre);
                     this.openModal();
                 },
                 updateBook() {
@@ -65,19 +72,25 @@
                         window.location.href = 'admin.html';
                         return;
                     }
-                    fetch(`http://localhost:3000/books/${this.editedBook.id}`, {
+                    const updatedBook = {
+                        id: this.editedBookId,
+                        title: this.editedTitle,
+                        author: this.editedAuthor,
+                        genre: this.editedGenre
+                    };
+                    console.log('Updating book:', updatedBook);
+                    fetch(`http://localhost:3000/books/${this.editedBookId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': this.token
                         },
-                        body: JSON.stringify(this.editedBook)
+                        body: JSON.stringify(updatedBook)
                     })
                         .then(response => response.json())
                         .then(updatedBook => {
                             const index = this.books.findIndex(b => b.id === updatedBook.id);
                             this.books.splice(index, 1, updatedBook);
-                            this.editedBook = null;
                             this.closeModal();
                         })
                         .catch(error => console.error('Error updating book:', error));
@@ -128,7 +141,10 @@
                 },
                 closeModal() {
                     document.getElementById('editModal').style.display = 'none';
-                    this.editedBook = null;
+                    this.editedBookId = null;
+                    this.editedTitle = '';
+                    this.editedAuthor = '';
+                    this.editedGenre = '';
                 },
                 init() {
                     this.fetchBooks();
@@ -194,7 +210,7 @@
                             <th>Title</th>
                             <th>Author</th>
                             <th>Genre</th>
-                            <th>Actions</th>
+                            <th x-show="username === 'Admin'">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -221,11 +237,11 @@
                 <h2>Edit Book</h2>
                 <form @submit.prevent="updateBook">
                     <label for="editTitle">Title</label>
-                    <input type="text" id="editTitle" x-model="editedBook.title" required>
+                    <input type="text" id="editTitle" x-model="editedTitle" required>
                     <label for="editAuthor">Author</label>
-                    <input type="text" id="editAuthor" x-model="editedBook.author" required>
+                    <input type="text" id="editAuthor" x-model="editedAuthor" required>
                     <label for="editGenre">Genre</label>
-                    <input type="text" id="editGenre" x-model="editedBook.genre" required>
+                    <input type="text" id="editGenre" x-model="editedGenre" required>
                     <button type="submit">Update Book</button>
                 </form>
             </div>
