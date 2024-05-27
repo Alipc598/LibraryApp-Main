@@ -219,9 +219,9 @@
                                 <td x-text="book.title"></td>
                                 <td x-text="book.author"></td>
                                 <td x-text="book.genre"></td>
-                                <td>
-                                    <button x-show="username === 'Admin'" @click="startEditBook(book)">Edit</button>
-                                    <button x-show="username === 'Admin'" @click="deleteBook(book.id)">Delete</button>
+                                <td x-show="username === 'Admin'">
+                                    <button @click="startEditBook(book)">Edit</button>
+                                    <button @click="deleteBook(book.id)">Delete</button>
                                 </td>
                             </tr>
                         </template>
