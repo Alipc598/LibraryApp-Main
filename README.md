@@ -1,8 +1,6 @@
 ### Demo Video
 
-Watch the demo video by clicking the image below:
-
-[![Watch the video](https://i.imgur.com/AcVQEDv_d.webp?maxwidth=1520&fidelity=grand)](https://streamable.com/f9h9l1)
+https://github.com/Alipc598/LibraryApp-Main/assets/117017807/8ea0a173-97cb-47cb-8a2c-a3b06dc95c87
 
 # Library Application
 
