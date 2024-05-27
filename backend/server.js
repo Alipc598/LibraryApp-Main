@@ -4,6 +4,8 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import pkg from 'pg';
 import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 config();
 
@@ -49,9 +51,16 @@ function authenticateAdmin(req, res, next) {
   });
 }
 
+// Resolve __dirname for ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Serve static files from the 'public' directory
+app.use(express.static(join(__dirname, 'public')));
+
 // Routes
 app.get('/', (req, res) => {
-  res.send('Library Application Backend');
+  res.sendFile(join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/books', async (req, res) => {
@@ -119,6 +128,11 @@ app.post('/admin', async (req, res) => {
   } else {
     res.status(401).send('Invalid credentials');
   }
+});
+
+// Serve the frontend HTML file for all unknown routes
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {
