@@ -48,7 +48,7 @@ The aim of this project is to develop a web application that serves as a book li
    - Ensure all functionalities work as expected.
 
 5. **Deployment and final testing (Week 7)**:
-   - Deploy frontend on Netlify.
+   - Deploy frontend on Heroku.
    - Deploy backend on Heroku.
    - Conduct final testing to ensure the application is fully functional.
 
@@ -64,7 +64,7 @@ The aim of this project is to develop a web application that serves as a book li
 - **Database**: PostgreSQL
 - **Authentication**: JSON Web Tokens (JWT)
 - **Deployment**:
-  - Front-end: Netlify
+  - Front-end: Heroku
   - Back-end: Heroku
 
 ### Key Features
@@ -81,8 +81,7 @@ The aim of this project is to develop a web application that serves as a book li
 
 ### Deployment Links
 
-- **Frontend**: [Library Application on Netlify](https://ica1-waad-library-ali.netlify.app/)
-- **Backend**: [Library Application Backend on Heroku](https://library-ica-14ae1793977b.herokuapp.com/) (Currently crashing, procced with running the server locally, until a fix has pushed)
+https://library-ali-ica-65504487e559.herokuapp.com/
 
 
 ### Usage

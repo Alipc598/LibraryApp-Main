@@ -6,21 +6,17 @@ Watch the demo video by clicking the image below:
 
 # Library Application
 
-You can access the deployed application [here](https://ica1-waad-library-ali.netlify.app/).
+You can access the deployed application [here](https://library-ali-ica-65504487e559.herokuapp.com/).
 
 ## Important Notes
 
 - **Admin Username:** Admin
 - **Admin Password:** 1234
-- **Start the back-end server locally on port 3000** for the application to be fully functional:
 
-```sh
-node backend/server.js
-```
 
 ## Overview
 
-This is a simple library application that allows users to browse and search books. Admin users can log in to add, delete, and edit books. The application is deployed on Netlify for the front-end.
+This is a simple library application that allows users to browse and search books. Admin users can log in to add, delete, and edit books. The application is deployed on Heroku.
 
 ## Features
 
@@ -37,7 +33,7 @@ This is a simple library application that allows users to browse and search book
 - Back-end: Node.js, Express.js
 - Database: PostgreSQL
 - Authentication: JSON Web Tokens (JWT)
-- Deployment: Netlify for front-end
+- Deployment: Heroku 
 
 ## Setup Instructions
 
@@ -95,7 +91,10 @@ node backend/server.js
 
 2. **Access the front-end:**
 
-- The front-end is deployed at [https://ica1-waad-library-ali.netlify.app/](https://ica1-waad-library-ali.netlify.app/).
+```sh
+cd frontend
+python -m http.server 8000
+```
 
 ### Usage
 
@@ -135,11 +134,13 @@ The library application project aimed to create a web application where users ca
    - This step required more time than expected but was completed successfully.
 
 5. **Deployment and Final Testing**:
-   - Deployed the frontend on Netlify without any major issues.
+   - Deployed the frontend on Heroku without any major issues.
    - Encountered significant challenges while deploying the backend on Heroku due to compatibility issues.
    - Explored other deployment options but faced limitations with free services.
    - Ultimately, the backend needs to be run locally for full functionality.
    - This phase was the most challenging and did not meet the initial expectation of having a fully deployed backend.
+
+   Update: The backend was deployed to Heroku.
 
 6. **Documentation and Submission**:
    - Prepared comprehensive documentation including setup instructions and usage guide.
@@ -149,6 +150,8 @@ The library application project aimed to create a web application where users ca
 ### Tricky Part: Deploying the Backend
 
 Deploying the backend was the trickiest part of this project. Most of the hosting services were not free or had limitations that affected functionality. Free services either did not support the required features or had compatibility issues with the backend code. Consequently, the backend server needs to be run locally, which is not ideal but necessary under the current circumstances.
+
+Update: Finally managed to deploy on Heroku.
 
 ### Critical Self-Evaluation
 
