@@ -27,7 +27,7 @@
                 token: localStorage.getItem('token') || '',
                 username: localStorage.getItem('username') || '',
                 fetchBooks() {
-                    fetch('http://localhost:3000/books')
+                    fetch('/books')
                         .then(response => response.json())
                         .then(data => {
                             console.log('Fetched books:', data);
@@ -41,7 +41,7 @@
                         window.location.href = 'admin.html';
                         return;
                     }
-                    fetch('http://localhost:3000/books', {
+                    fetch('/books', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -79,7 +79,7 @@
                         genre: this.editedGenre
                     };
                     console.log('Updating book:', updatedBook);
-                    fetch(`http://localhost:3000/books/${this.editedBookId}`, {
+                    fetch(`/books/${this.editedBookId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
@@ -101,7 +101,7 @@
                         window.location.href = 'admin.html';
                         return;
                     }
-                    fetch(`http://localhost:3000/books/${id}`, {
+                    fetch(`/books/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': this.token
@@ -114,7 +114,7 @@
                 },
                 searchBooks() {
                     const query = `${this.searchField}=${encodeURIComponent(this.searchQuery)}`;
-                    fetch(`http://localhost:3000/books?${query}`)
+                    fetch(`/books?${query}`)
                         .then(response => response.json())
                         .then(data => {
                             console.log('Search results:', data);
