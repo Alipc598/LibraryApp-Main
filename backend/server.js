@@ -65,36 +65,24 @@ app.get('/', (req, res) => {
 
 app.get('/books', async (req, res) => {
   try {
-    const { title, author, genre } = req.query;
-    let query = 'SELECT * FROM books WHERE 1=1';
-    let params = [];
-
-    if (title) {
-      query += ' AND title ILIKE $' + (params.length + 1);
-      params.push(`%${title}%`);
-    }
-    if (author) {
-      query += ' AND author ILIKE $' + (params.length + 1);
-      params.push(`%${author}%`);
-    }
-    if (genre) {
-      query += ' AND genre ILIKE $' + (params.length + 1);
-      params.push(`%${genre}%`);
-    }
-
-    const result = await pool.query(query, params);
+    const result = await pool.query('SELECT * FROM books');
     res.json(result.rows);
   } catch (err) {
+    console.error('Error fetching books:', err.message);
     res.status(500).send(err.message);
   }
 });
 
 app.post('/books', authenticateAdmin, async (req, res) => {
   const { title, author, genre } = req.body;
+  console.log(`Attempting to add book with title: ${title}, author: ${author}, genre: ${genre}`);
+  
   try {
     const result = await pool.query('INSERT INTO books (title, author, genre) VALUES ($1, $2, $3) RETURNING *', [title, author, genre]);
+    console.log('Book added successfully:', result.rows[0]);
     res.json(result.rows[0]);
   } catch (err) {
+    console.error('Error adding book:', err.message);
     res.status(500).send(err.message);
   }
 });
@@ -102,20 +90,28 @@ app.post('/books', authenticateAdmin, async (req, res) => {
 app.patch('/books/:id', authenticateAdmin, async (req, res) => {
   const { id } = req.params;
   const { title, author, genre } = req.body;
+  console.log(`Attempting to update book with id: ${id}, title: ${title}, author: ${author}, genre: ${genre}`);
+  
   try {
     const result = await pool.query('UPDATE books SET title = $1, author = $2, genre = $3 WHERE id = $4 RETURNING *', [title, author, genre, id]);
+    console.log('Book updated successfully:', result.rows[0]);
     res.json(result.rows[0]);
   } catch (err) {
+    console.error('Error updating book:', err.message);
     res.status(500).send(err.message);
   }
 });
 
 app.delete('/books/:id', authenticateAdmin, async (req, res) => {
   const { id } = req.params;
+  console.log(`Attempting to delete book with id: ${id}`);
+  
   try {
     await pool.query('DELETE FROM books WHERE id = $1', [id]);
+    console.log('Book deleted successfully');
     res.sendStatus(204);
   } catch (err) {
+    console.error('Error deleting book:', err.message);
     res.status(500).send(err.message);
   }
 });
