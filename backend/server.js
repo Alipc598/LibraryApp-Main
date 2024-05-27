@@ -122,10 +122,14 @@ app.delete('/books/:id', authenticateAdmin, async (req, res) => {
 
 app.post('/admin', async (req, res) => {
   const { username, password } = req.body;
+  console.log(`Login attempt with username: ${username} and password: ${password}`);
+
   if (username === 'Admin' && password === '1234') {
     const token = jwt.sign({ username }, secret);
+    console.log(`Login successful, generated token: ${token}`);
     res.json({ token });
   } else {
+    console.log('Invalid credentials');
     res.status(401).send('Invalid credentials');
   }
 });
